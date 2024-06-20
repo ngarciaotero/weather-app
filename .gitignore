@@ -1,0 +1,14 @@
+# node_modules dir
+node_modules/
+dist/
+# macOS metadata
+.DS_Store
+
+# VSCode artifacts
+.vscode/*
+!.vscode/settings.json
+.history
+
+# Logs
+logs/
+*.log
