@@ -17,3 +17,15 @@ const searchDropdown = () => {
   dropdownContainer.classList.add("dropdown-search-content");
   return dropdownContainer;
 };
+
+export const updateDropdown = (results, dropdownElement) => {
+  dropdownElement.innerHTML = "";
+
+  if (results.length === 0) {
+    dropdownElement.innerHTML = "<p>No results found</p>";
+    return;
+  }
+
+  const locationOptions = displayLocationOptions(results);
+  dropdownElement.appendChild(locationOptions);
+};
