@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "date-fns": "^3.6.0",
     "eslint": "^9.4.0"
   },
   "name": "webpack-starter-template",

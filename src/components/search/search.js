@@ -1,12 +1,20 @@
+import { handleSearchInput } from "./handleSearchInput.js";
 import { displaySelectLocation } from "../dashboard/dashboard.js";
+import { createElement, createTextElement } from "../../utils/uiElements.js";
 
-export const createSearchComponent = (container) => {
+export const createSearchComponent = () => {
   const searchContainer = document.querySelector(".search-container");
-  searchContainer.appendChild(searchInput());
+  const inputElement = searchInput();
+  const dropdownElement = searchDropdown();
+
+  searchContainer.appendChild(inputElement);
+  searchContainer.appendChild(dropdownElement);
+
+  inputElement.addEventListener("input", handleSearchInput);
 };
 
 const searchInput = () => {
-  const inputElement = document.createElement("input");
+  const inputElement = createElement("input");
   inputElement.type = "search";
   inputElement.id = "location-search";
   inputElement.name = "loc-search";
@@ -15,9 +23,7 @@ const searchInput = () => {
 };
 
 const searchDropdown = () => {
-  const dropdownContainer = document.createElement("div");
-  dropdownContainer.classList.add("dropdown-search-content");
-  return dropdownContainer;
+  return createElement("div", "dropdown-search-content");
 };
 
 export const updateDropdown = (results, dropdownElement) => {
@@ -33,10 +39,12 @@ export const updateDropdown = (results, dropdownElement) => {
 };
 
 const displayLocationOptions = (results) => {
-  const ul = document.createElement("ul");
+  const ul = createElement("ul");
   results.forEach((result) => {
-    const li = document.createElement("li");
-    li.textContent = `${result.name}, ${result.region} (${result.country})`;
+    const li = createTextElement(
+      `${result.name}, ${result.region} (${result.country})`,
+      "li"
+    );
     li.addEventListener("click", () => displaySelectLocation(result));
     ul.appendChild(li);
   });
