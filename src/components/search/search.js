@@ -1,3 +1,5 @@
+import { displaySelectLocation } from "../dashboard/dashboard.js";
+
 export const createSearchComponent = (container) => {
   const searchContainer = document.querySelector(".search-container");
   searchContainer.appendChild(searchInput());
@@ -28,4 +30,15 @@ export const updateDropdown = (results, dropdownElement) => {
 
   const locationOptions = displayLocationOptions(results);
   dropdownElement.appendChild(locationOptions);
+};
+
+const displayLocationOptions = (results) => {
+  const ul = document.createElement("ul");
+  results.forEach((result) => {
+    const li = document.createElement("li");
+    li.textContent = `${result.name}, ${result.region} (${result.country})`;
+    li.addEventListener("click", () => displaySelectLocation(result));
+    ul.appendChild(li);
+  });
+  return ul;
 };
