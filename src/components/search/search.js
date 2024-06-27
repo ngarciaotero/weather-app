@@ -11,3 +11,9 @@ const searchInput = () => {
   inputElement.placeholder = "Search City or Zip Code";
   return inputElement;
 };
+
+const searchDropdown = () => {
+  const dropdownContainer = document.createElement("div");
+  dropdownContainer.classList.add("dropdown-search-content");
+  return dropdownContainer;
+};
