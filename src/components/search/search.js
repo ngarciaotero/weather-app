@@ -1,11 +1,13 @@
-import { handleSearchInput } from "./handleSearchInput.js";
+import { clearSearch, handleSearchInput } from "./handleSearchInput.js";
 import { displaySelectLocation } from "../dashboard/dashboard.js";
 import { createElement, createTextElement } from "../../utils/uiElements.js";
 import { createSkeletonText } from "../../utils/skeletonHelper.js";
 
+let inputElement;
+
 export const createSearchComponent = () => {
   const searchContainer = document.querySelector(".search-container");
-  const inputElement = searchInput();
+  inputElement = searchInput();
   const dropdownElement = searchDropdown();
 
   searchContainer.appendChild(inputElement);
@@ -57,8 +59,17 @@ const displayLocationOptions = (results) => {
       `${result.name}, ${result.region} (${result.country})`,
       "li"
     );
-    li.addEventListener("click", () => displaySelectLocation(result));
+    li.addEventListener("click", () => {
+      displaySelectLocation(result);
+      clearSearch();
+    });
     ul.appendChild(li);
   });
   return ul;
+};
+
+export const clearSearchInput = () => {
+  if (inputElement) {
+    inputElement.value = "";
+  }
 };
