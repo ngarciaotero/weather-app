@@ -1,6 +1,9 @@
 export const createElement = (tag, className = "") => {
   const element = document.createElement(tag);
-  if (className) element.classList.add(className);
+  if (className) {
+    const classNames = className.split(" ");
+    element.classList.add(...classNames);
+  }
   return element;
 };
 

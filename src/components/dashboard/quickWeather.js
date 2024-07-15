@@ -4,25 +4,26 @@ import {
   createTextElement,
   createImageElement,
 } from "../../utils/uiElements.js";
+import { weatherComponentWrapper } from "../../utils/skeletonHelper.js";
 
-export const quickWeather = (weatherData) => {
-  const weatherContainer = createElement("div");
+const quickWeatherComponent = (weatherData) => {
+  const weatherContainer = createElement("div", "quick-weather");
+
   const location = locationContainer(
-    weatherData.location.name,
-    weatherData.location.region
+    `${weatherData.location.name}, ${weatherData.location.region}`
   );
-  const temperature = temperatureContainer(
-    weatherData.current.tempC,
-    weatherData.current.tempF
-  );
-  const condition = conditionContainer(
-    weatherData.current.conditionIcon,
-    weatherData.current.conditionTxt
-  );
-  const feelsLike = feelsLikeContainer(
-    weatherData.current.feelsLikeC,
-    weatherData.current.feelsLikeF
-  );
+  const temperature = temperatureContainer({
+    tempC: weatherData.current.tempC,
+    tempF: weatherData.current.tempF,
+  });
+  const condition = conditionContainer({
+    icon: weatherData.current.conditionIcon,
+    text: weatherData.current.conditionTxt,
+  });
+  const feelsLike = feelsLikeContainer({
+    tempC: weatherData.current.feelsLikeC,
+    tempF: weatherData.current.feelsLikeF,
+  });
 
   weatherContainer.appendChild(location);
   weatherContainer.appendChild(temperature);
@@ -32,31 +33,43 @@ export const quickWeather = (weatherData) => {
   return weatherContainer;
 };
 
-const conditionContainer = (icon, text) => {
-  const container = createElement("div");
-  const conditionImg = createImageElement(icon);
-  const conditionTxt = createTextElement(text);
+const locationContainer = (locationText) => {
+  return createTextElement(locationText, "h2");
+};
 
-  container.appendChild(conditionImg);
-  container.appendChild(conditionTxt);
+const temperatureContainer = (tempData) => {
+  return createToggleContainer(
+    tempData.tempF,
+    "F",
+    tempData.tempC,
+    "C",
+    "temperature"
+  );
+};
 
+const conditionContainer = (conditionData) => {
+  const container = createElement("div", "condition-container");
+  container.appendChild(createImageElement(conditionData.icon));
+  container.appendChild(createTextElement(conditionData.text));
   return container;
 };
 
-const locationContainer = (name, region) => {
-  return createTextElement(`${name}, ${region}`, "h2");
-};
-
-const temperatureContainer = (tempC, tempF) => {
-  return createToggleContainer(tempF, "F", tempC, "C", "temperature");
-};
-
-const feelsLikeContainer = (tempC, tempF) => {
-  const container = createElement("div");
-  const text = createTextElement("Feels like:", "span");
-  container.appendChild(text);
+const feelsLikeContainer = (tempData) => {
+  const container = createElement("div", "feels-like-container");
+  container.appendChild(createTextElement("Feels like:", "span"));
   container.appendChild(
-    createToggleContainer(tempF, "F", tempC, "C", "temperature")
+    createToggleContainer(
+      tempData.tempF,
+      "F",
+      tempData.tempC,
+      "C",
+      "temperature"
+    )
   );
   return container;
 };
+
+export const quickWeather = weatherComponentWrapper(
+  quickWeatherComponent,
+  "quick-weather"
+);

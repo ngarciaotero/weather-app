@@ -1,10 +1,24 @@
 import { createElement, createTextElement } from "../../utils/uiElements.js";
 import { createToggleContainer } from "../dashboard/unitToggler.js";
+import { createSkeletonText } from "../../utils/skeletonHelper.js";
 
 export const createPinnedBox =
-  (onRemove, onClick) => (locationId, city, region, tempF, tempC) => {
+  (onRemove, onClick) =>
+  (locationId, city, region, tempF, tempC, isLoading = false) => {
     const box = createElement("div");
     box.dataset.locationId = locationId;
+
+    if (isLoading) {
+      box.classList.add("skeleton");
+      const skeletonTemp = createSkeletonText();
+      const skeletonLocation = createSkeletonText();
+
+      box.appendChild(skeletonTemp);
+      box.appendChild(skeletonLocation);
+
+      return box;
+    }
+
     const location = createTextElement(`${city}, ${region}`);
     const temp = createToggleContainer(tempF, "F", tempC, "C", "temperature");
     const removeBtn = createRemoveBtn(locationId, onRemove);

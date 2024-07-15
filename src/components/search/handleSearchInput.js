@@ -6,13 +6,17 @@ export const handleSearchInput = async (event) => {
   const dropdownContent = document.querySelector(".dropdown-search-content");
 
   if (searchValue.length < 3) {
-    dropdownContent.innerHTML = "";
+    updateDropdown([], dropdownContent);
     return;
   }
+
+  updateDropdown([], dropdownContent, true);
+
   try {
     const searchResults = await searchFor(searchValue);
     updateDropdown(searchResults, dropdownContent);
   } catch (error) {
     console.error("Error fetching search results: ", error);
+    updateDropdown([], dropdownContent);
   }
 };

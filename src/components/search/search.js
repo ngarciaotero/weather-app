@@ -1,6 +1,7 @@
 import { handleSearchInput } from "./handleSearchInput.js";
 import { displaySelectLocation } from "../dashboard/dashboard.js";
 import { createElement, createTextElement } from "../../utils/uiElements.js";
+import { createSkeletonText } from "../../utils/skeletonHelper.js";
 
 export const createSearchComponent = () => {
   const searchContainer = document.querySelector(".search-container");
@@ -26,8 +27,19 @@ const searchDropdown = () => {
   return createElement("div", "dropdown-search-content");
 };
 
-export const updateDropdown = (results, dropdownElement) => {
+export const updateDropdown = (results, dropdownElement, isLoading = false) => {
   dropdownElement.innerHTML = "";
+
+  if (isLoading) {
+    const skeletonItems = Array(3)
+      .fill()
+      .map(() => {
+        const skeletonItem = createSkeletonText();
+        return skeletonItem;
+      });
+    skeletonItems.forEach((item) => dropdownElement.appendChild(item));
+    return;
+  }
 
   if (results.length === 0) {
     dropdownElement.innerHTML = "<p>No results found</p>";

@@ -57,7 +57,6 @@ export const createPinBtn = createPinButton(onPinClick);
 
 export const loadPinnedLocations = async () => {
   const pinnedLocations = getPinnedLocations();
-  initializeDefaultLocations();
 
   for (const location of pinnedLocations) {
     try {
@@ -65,6 +64,12 @@ export const loadPinnedLocations = async () => {
         location.lat,
         location.lon
       );
+
+      const skeletonBox = pinnedContainer.querySelector(
+        `[data-location-id="${location.id}"]`
+      );
+      if (skeletonBox) skeletonBox.remove();
+
       const pinBox = createPinnedBox(
         removePinnedLocation,
         onPinnedLocationClick
@@ -80,4 +85,17 @@ export const loadPinnedLocations = async () => {
       console.error(`Failed to load data for ${location.name}: `, error);
     }
   }
+};
+
+export const renderPinnedSkeletons = () => {
+  const pinnedLocations = getPinnedLocations();
+  initializeDefaultLocations();
+
+  pinnedLocations.forEach((location) => {
+    const skeletonBox = createPinnedBox(
+      removePinnedLocation,
+      onPinnedLocationClick
+    )(location.id, "", "", "", "", true);
+    pinnedContainer.appendChild(skeletonBox);
+  });
 };

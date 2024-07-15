@@ -5,9 +5,19 @@ import {
   createTextElement,
   createImageElement,
 } from "../../utils/uiElements.js";
+import { createSkeletonText } from "../../utils/skeletonHelper.js";
 
 export const hourlyForecastBox = (hourlyData) => {
-  const box = createElement("div");
+  const boxContainer = createElement("div", "hourly-box");
+
+  if (!hourlyData) {
+    boxContainer.appendChild(createSkeletonText("40px", "1em"));
+    boxContainer.appendChild(createSkeletonText("40px", "1em"));
+    boxContainer.appendChild(createSkeletonText("40px", "1em"));
+    boxContainer.appendChild(createSkeletonText("40px", "1em"));
+    return boxContainer;
+  }
+
   const hourBlock = hourContainer(hourlyData.time);
   const conditionTxt = conditionTxtContainer(hourlyData.conditionTxt);
   const conditionIcon = conditionIconContainer(hourlyData.conditionIcon);
@@ -19,11 +29,11 @@ export const hourlyForecastBox = (hourlyData) => {
     "temperature"
   );
 
-  box.appendChild(hourBlock);
-  box.appendChild(tempElement);
-  box.appendChild(conditionIcon);
-  box.appendChild(conditionTxt);
-  return box;
+  boxContainer.appendChild(hourBlock);
+  boxContainer.appendChild(tempElement);
+  boxContainer.appendChild(conditionIcon);
+  boxContainer.appendChild(conditionTxt);
+  return boxContainer;
 };
 
 const hourContainer = (hour) => {

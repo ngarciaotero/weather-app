@@ -1,8 +1,10 @@
 import { widgetBox, singleValueWidgetBox } from "./createWidgetBox.js";
 import { createElement } from "../../utils/uiElements.js";
+import { weatherComponentWrapper } from "../../utils/skeletonHelper.js";
 
-export const airWeather = (weatherData) => {
-  const airContainer = createElement("div");
+const airWeatherComponent = (weatherData) => {
+  const airContainer = createElement("div", "air-weather");
+
   const aqi = aqiContainer(weatherData.current.aqi);
   const pressure = pressureContainer(
     weatherData.current.pressure.in,
@@ -30,3 +32,8 @@ const aqiIndexMapping = {
   5: "Very Unhealthy",
   6: "Hazardous",
 };
+
+export const airWeather = weatherComponentWrapper(
+  airWeatherComponent,
+  "air-weather"
+);

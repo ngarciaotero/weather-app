@@ -1,8 +1,10 @@
 import { widgetBox, singleValueWidgetBox } from "./createWidgetBox.js";
 import { createElement } from "../../utils/uiElements.js";
+import { weatherComponentWrapper } from "../../utils/skeletonHelper.js";
 
-export const moistureWeather = (weatherData) => {
-  const moistureContainer = createElement("div");
+const moistureWeatherComponent = (weatherData) => {
+  const moistureContainer = createElement("div", "moisture-weather");
+
   const humidity = humidityContainer(weatherData.current.humidity);
   const precipitation = precipitationContainer(
     weatherData.current.precipitation.in,
@@ -29,3 +31,8 @@ const precipitationContainer = (preIn, preMm) => {
 const dewPointContainer = (tempC, tempF) => {
   return widgetBox("Dew Point", tempF, "F", tempC, "C", "temperature");
 };
+
+export const moistureWeather = weatherComponentWrapper(
+  moistureWeatherComponent,
+  "moisture-weather"
+);

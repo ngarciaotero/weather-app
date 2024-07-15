@@ -1,8 +1,9 @@
 import { widgetBox, singleValueWidgetBox } from "./createWidgetBox.js";
 import { createElement } from "../../utils/uiElements.js";
+import { weatherComponentWrapper } from "../../utils/skeletonHelper.js";
 
-export const windWeather = (weatherData) => {
-  const windContainer = createElement("div");
+const windWeatherComponent = (weatherData) => {
+  const windContainer = createElement("div", "wind-weather");
 
   const direction = directionContainer(weatherData.current.wind.direction);
   const speed = speedContainer(
@@ -41,3 +42,8 @@ const windChillContainer = (tempC, tempF) => {
 const gustContainer = (mph, kph) => {
   return widgetBox("Gust", mph, "mph", kph, "kph", "speed");
 };
+
+export const windWeather = weatherComponentWrapper(
+  windWeatherComponent,
+  "wind-weather"
+);
