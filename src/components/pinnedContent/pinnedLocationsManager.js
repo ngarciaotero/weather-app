@@ -9,8 +9,25 @@ import { getForecastData } from "../../api/weatherApi.js";
 import { createPinButton } from "./pinButton.js";
 import { createPinnedBox } from "./pinnedBox.js";
 import { displaySelectLocation } from "../dashboard/dashboard.js";
+import {
+  createElement,
+  createImageElement,
+  createTextElement,
+} from "../../utils/uiElements.js";
+import pinMap from "../../imgs/pin-map.png";
 
 const pinnedContainer = document.querySelector(".pinned-locations");
+
+const pinLocationHeader = () => {
+  const header = createElement("div", "pinned-header");
+  header.appendChild(createImageElement(pinMap));
+  header.appendChild(
+    createTextElement("Pinned Locations", "h2", "pin-txt-header")
+  );
+  return header;
+};
+
+pinnedContainer.appendChild(pinLocationHeader());
 
 const onPinnedLocationClick = async (locationId) => {
   const pinnedLocations = getPinnedLocations();

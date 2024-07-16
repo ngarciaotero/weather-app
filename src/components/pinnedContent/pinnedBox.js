@@ -5,7 +5,7 @@ import { createSkeletonText } from "../../utils/skeletonHelper.js";
 export const createPinnedBox =
   (onRemove, onClick) =>
   (locationId, city, region, tempF, tempC, isLoading = false) => {
-    const box = createElement("div");
+    const box = createElement("div", "pin-box");
     box.dataset.locationId = locationId;
 
     if (isLoading) {
@@ -19,10 +19,15 @@ export const createPinnedBox =
       return box;
     }
 
-    const location = createTextElement(`${city}, ${region}`);
+    const location = createTextElement(
+      `${city}, ${region}`,
+      "div",
+      "pin-location"
+    );
     const temp = createToggleContainer(tempF, "F", tempC, "C", "temperature");
     const removeBtn = createRemoveBtn(locationId, onRemove);
 
+    temp.classList.add("pin-temp");
     box.appendChild(temp);
     box.appendChild(location);
     box.appendChild(removeBtn);
@@ -36,8 +41,8 @@ export const createPinnedBox =
   };
 
 const createRemoveBtn = (locationId, onRemove) => {
-  const removeBtn = createElement("button");
-  removeBtn.innerHTML = "&#x2716;";
+  const removeBtn = createElement("button", "close-button");
+  removeBtn.innerHTML = "&#10005";
   removeBtn.addEventListener("click", () => onRemove(locationId));
   return removeBtn;
 };
