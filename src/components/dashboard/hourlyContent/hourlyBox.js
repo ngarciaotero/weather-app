@@ -1,13 +1,13 @@
-import { formatTime } from "../../utils/dateFormatHelper.js";
-import { createToggleContainer } from "./unitToggler.js";
+import { formatTime, isCurrentHour } from "../../../utils/dateFormatHelper.js";
+import { createToggleContainer } from "../../../utils/unitToggler.js";
 import {
   createElement,
   createTextElement,
   createImageElement,
-} from "../../utils/uiElements.js";
-import { createSkeletonText } from "../../utils/skeletonHelper.js";
+} from "../../../utils/uiElements.js";
+import { createSkeletonText } from "../../../utils/skeletonHelper.js";
 
-export const hourlyForecastBox = (hourlyData) => {
+export const hourlyForecastBox = (hourlyData, currentTime) => {
   const boxContainer = createElement("div", "hourly-box");
 
   if (!hourlyData) {
@@ -18,7 +18,7 @@ export const hourlyForecastBox = (hourlyData) => {
     return boxContainer;
   }
 
-  const hourBlock = hourContainer(hourlyData.time);
+  const hourBlock = hourContainer(hourlyData.time, currentTime, boxContainer);
   const conditionTxt = conditionTxtContainer(hourlyData.conditionTxt);
   const conditionIcon = conditionIconContainer(hourlyData.conditionIcon);
   const tempElement = createToggleContainer(
@@ -36,8 +36,12 @@ export const hourlyForecastBox = (hourlyData) => {
   return boxContainer;
 };
 
-const hourContainer = (hour) => {
+const hourContainer = (hour, currentTime, boxContainer) => {
   const timeFormat = formatTime(hour);
+
+  if (currentTime && isCurrentHour(timeFormat, currentTime)) {
+    boxContainer.classList.add("current-hour");
+  }
   return createTextElement(timeFormat, "div");
 };
 

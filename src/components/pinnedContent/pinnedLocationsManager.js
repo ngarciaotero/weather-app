@@ -29,44 +29,34 @@ const pinLocationHeader = () => {
 
 pinnedContainer.appendChild(pinLocationHeader());
 
-const onPinnedLocationClick = async (locationId) => {
+const onPinnedLocationClick = async (locationUrl) => {
   const pinnedLocations = getPinnedLocations();
-  const location = pinnedLocations.find((loc) => loc.id === locationId);
+  const location = pinnedLocations.find((loc) => loc.url === locationUrl);
   if (location) {
-    const locationObject = {
-      id: location.id,
-      lat: location.lat,
-      lon: location.lon,
-    };
-    await displaySelectLocation(locationObject);
+    await displaySelectLocation(location);
   } else {
     console.error("Pinned location not found");
   }
 };
 
 export const onPinClick = (locationData, weatherData) => {
-  if (isLocationPinned(locationData.id, locationData.lat, locationData.lon))
-    return;
+  if (isLocationPinned(locationData.url)) return;
 
-  const { id: locationId, lat: latitude, lon: longitude } = locationData;
-  const { name: city, region } = weatherData.location;
-  const { tempF, tempC } = weatherData.current;
-
-  addLocation({ id: locationId, lat: latitude, lon: longitude });
+  addLocation(locationData);
   const pinBox = createPinnedBox(removePinnedLocation, onPinnedLocationClick)(
-    locationId,
-    city,
-    region,
-    tempF,
-    tempC
+    locationData.url,
+    weatherData.location.name,
+    weatherData.location.region,
+    weatherData.current.tempF,
+    weatherData.current.tempC
   );
   pinnedContainer.appendChild(pinBox);
 };
 
-const removePinnedLocation = (locationId) => {
-  removeLocation(locationId);
+const removePinnedLocation = (locationUrl) => {
+  removeLocation(locationUrl);
   const boxElement = pinnedContainer.querySelector(
-    `[data-location-id="${locationId}"]`
+    `[data-location-url="${locationUrl}"]`
   );
   if (boxElement) boxElement.remove();
 };
@@ -78,13 +68,10 @@ export const loadPinnedLocations = async () => {
 
   for (const location of pinnedLocations) {
     try {
-      const currentLocationData = await getForecastData(
-        location.lat,
-        location.lon
-      );
+      const currentLocationData = await getForecastData(location.url);
 
       const skeletonBox = pinnedContainer.querySelector(
-        `[data-location-id="${location.id}"]`
+        `[data-location-url="${location.url}"]`
       );
       if (skeletonBox) skeletonBox.remove();
 
@@ -92,7 +79,7 @@ export const loadPinnedLocations = async () => {
         removePinnedLocation,
         onPinnedLocationClick
       )(
-        location.id,
+        location.url,
         currentLocationData.location.name,
         currentLocationData.location.region,
         currentLocationData.current.tempF,
@@ -100,7 +87,7 @@ export const loadPinnedLocations = async () => {
       );
       pinnedContainer.appendChild(pinBox);
     } catch (error) {
-      console.error(`Failed to load data for ${location.name}: `, error);
+      console.error(`Failed to load data for ${location.url}: `, error);
     }
   }
 };
@@ -113,7 +100,7 @@ export const renderPinnedSkeletons = () => {
     const skeletonBox = createPinnedBox(
       removePinnedLocation,
       onPinnedLocationClick
-    )(location.id, "", "", "", "", true);
+    )(location.url, "", "", "", "", true);
     pinnedContainer.appendChild(skeletonBox);
   });
 };

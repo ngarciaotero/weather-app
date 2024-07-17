@@ -1,17 +1,17 @@
 import { createElement, createTextElement } from "../../utils/uiElements.js";
-import { createToggleContainer } from "../dashboard/unitToggler.js";
+import { createToggleContainer } from "../../utils/unitToggler.js";
 import { createSkeletonText } from "../../utils/skeletonHelper.js";
 
 export const createPinnedBox =
   (onRemove, onClick) =>
-  (locationId, city, region, tempF, tempC, isLoading = false) => {
+  (url, city, region, tempF, tempC, isLoading = false) => {
     const box = createElement("div", "pin-box");
-    box.dataset.locationId = locationId;
+    box.dataset.locationUrl = url;
 
     if (isLoading) {
       box.classList.add("skeleton");
-      const skeletonTemp = createSkeletonText();
-      const skeletonLocation = createSkeletonText();
+      const skeletonTemp = createSkeletonText("25%", "25px");
+      const skeletonLocation = createSkeletonText("75%", "25px");
 
       box.appendChild(skeletonTemp);
       box.appendChild(skeletonLocation);
@@ -25,7 +25,7 @@ export const createPinnedBox =
       "pin-location"
     );
     const temp = createToggleContainer(tempF, "F", tempC, "C", "temperature");
-    const removeBtn = createRemoveBtn(locationId, onRemove);
+    const removeBtn = createRemoveBtn(url, onRemove);
 
     temp.classList.add("pin-temp");
     box.appendChild(temp);
@@ -34,15 +34,15 @@ export const createPinnedBox =
 
     box.addEventListener("click", (event) => {
       if (event.target !== removeBtn && event.target !== removeBtn.firstChild) {
-        onClick(locationId);
+        onClick(url);
       }
     });
     return box;
   };
 
-const createRemoveBtn = (locationId, onRemove) => {
+const createRemoveBtn = (locationUrl, onRemove) => {
   const removeBtn = createElement("button", "close-button");
   removeBtn.innerHTML = "&#10005";
-  removeBtn.addEventListener("click", () => onRemove(locationId));
+  removeBtn.addEventListener("click", () => onRemove(locationUrl));
   return removeBtn;
 };

@@ -1,14 +1,15 @@
 import { getForecastData } from "../../api/weatherApi.js";
-import { quickWeather } from "./quickWeather.js";
-import { windWeather } from "./windWeather.js";
-import { moistureWeather } from "./moistureWeather.js";
-import { airWeather } from "./airWeather.js";
-import { hourlyForecast } from "./hourlyForecast.js";
-import { unitTogglePreferences } from "./unitPreferences.js";
+import { quickWeather } from "./quickContent/quickWeather.js";
+import { windWeather } from "./allConditionsContent/windWeather.js";
+import { moistureWeather } from "./allConditionsContent/moistureWeather.js";
+import { airWeather } from "./allConditionsContent/airWeather.js";
+import { hourlyForecast } from "./hourlyContent/hourlyForecast.js";
+import { unitTogglePreferences } from "./preferenceContent/unitPreferences.js";
 import { createPinButton } from "../pinnedContent/pinButton.js";
 import { onPinClick } from "../pinnedContent/pinnedLocationsManager.js";
 import { createElement } from "../../utils/uiElements.js";
 import { createSkeletonElement } from "../../utils/skeletonHelper.js";
+import { sunWeather } from "./allConditionsContent/sunWeather.js";
 
 export const displaySelectLocation = async (location) => {
   clearDashboard();
@@ -18,10 +19,7 @@ export const displaySelectLocation = async (location) => {
   weatherDashboard.appendChild(loadingDashboard);
 
   try {
-    const currentLocationData = await getForecastData(
-      location.lat,
-      location.lon
-    );
+    const currentLocationData = await getForecastData(location.url);
     clearDashboard();
     const dashboard = createDashboard(location, currentLocationData, false);
     weatherDashboard.appendChild(dashboard);
@@ -33,8 +31,8 @@ export const displaySelectLocation = async (location) => {
 };
 
 const createDashboard = (locationData, currentLocationData, isLoading) => {
-  const weatherDashboard = createElement("div");
-
+  const weatherDashboard = createElement("div", "inner-dashboard");
+  const allConditions = createElement("div", "all-conditions");
   const pinButton = isLoading
     ? createSkeletonElement("skeleton-button")
     : createPinButton(onPinClick)(locationData || {}, currentLocationData);
@@ -44,23 +42,29 @@ const createDashboard = (locationData, currentLocationData, isLoading) => {
     isLoading ? null : currentLocationData
   );
   const airContainer = airWeather(isLoading ? null : currentLocationData);
+  const sunContainer = sunWeather(isLoading ? null : currentLocationData);
   const hourlyContainers = isLoading
     ? Array(3)
         .fill()
         .map(() => hourlyForecast(null))
     : [
-        hourlyForecast(currentLocationData.forecast[0]),
-        hourlyForecast(currentLocationData.forecast[1]),
-        hourlyForecast(currentLocationData.forecast[2]),
+        hourlyForecast(
+          currentLocationData.forecast[0],
+          currentLocationData.location.localTime
+        ),
+        hourlyForecast(currentLocationData.forecast[1], null),
+        hourlyForecast(currentLocationData.forecast[2], null),
       ];
   const preferenceContainer = unitTogglePreferences();
 
-  weatherDashboard.appendChild(pinButton);
+  quickContainer.appendChild(pinButton);
   weatherDashboard.appendChild(quickContainer);
   weatherDashboard.appendChild(preferenceContainer);
-  weatherDashboard.appendChild(windContainer);
-  weatherDashboard.appendChild(moistureContainer);
-  weatherDashboard.appendChild(airContainer);
+  allConditions.appendChild(windContainer);
+  allConditions.appendChild(moistureContainer);
+  allConditions.appendChild(airContainer);
+  allConditions.appendChild(sunContainer);
+  weatherDashboard.appendChild(allConditions);
   hourlyContainers.forEach((hourContainer) =>
     weatherDashboard.appendChild(hourContainer)
   );

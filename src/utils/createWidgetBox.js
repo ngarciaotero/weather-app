@@ -1,5 +1,5 @@
 import { createToggleContainer } from "./unitToggler.js";
-import { createElement, createTextElement } from "../../utils/uiElements.js";
+import { createElement, createTextElement } from "./uiElements.js";
 
 export const widgetBox = (
   categoryLabel,
@@ -9,7 +9,7 @@ export const widgetBox = (
   symbol2,
   unitType
 ) => {
-  const box = createElement("div");
+  const box = createElement("div", "widget-box");
   const label = createTextElement(categoryLabel, "div");
   const value = createToggleContainer(
     value1,
@@ -24,10 +24,14 @@ export const widgetBox = (
   return box;
 };
 
-export const singleValueWidgetBox = (categoryLabel, value1) => {
-  const box = createElement("div");
+export const singleValueWidgetBox = (categoryLabel, value1, color = null) => {
+  const box = createElement("div", "widget-box");
   const label = createTextElement(categoryLabel, "div");
   const value = createTextElement(value1, "div");
+
+  if (color) {
+    value.style.color = color;
+  }
 
   box.appendChild(label);
   box.appendChild(value);

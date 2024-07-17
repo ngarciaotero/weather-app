@@ -1,6 +1,9 @@
-import { widgetBox, singleValueWidgetBox } from "./createWidgetBox.js";
-import { createElement } from "../../utils/uiElements.js";
-import { weatherComponentWrapper } from "../../utils/skeletonHelper.js";
+import {
+  widgetBox,
+  singleValueWidgetBox,
+} from "../../../utils/createWidgetBox.js";
+import { createElement } from "../../../utils/uiElements.js";
+import { weatherComponentWrapper } from "../../../utils/skeletonHelper.js";
 
 const windWeatherComponent = (weatherData) => {
   const windContainer = createElement("div", "wind-weather");

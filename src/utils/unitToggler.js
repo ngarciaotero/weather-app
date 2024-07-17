@@ -1,4 +1,4 @@
-import { createElement } from "../../utils/uiElements";
+import { createElement } from "./uiElements";
 
 export const createToggleContainer = (value1, unit1, value2, unit2, type) => {
   const container = createElement("div", "unit-value");

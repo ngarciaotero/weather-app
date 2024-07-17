@@ -21,29 +21,35 @@ export const createSkeletonWidget = () => {
 };
 
 export const createSkeletonHourlyBoxes = () => {
-  const hourlyContainer = createElement("div", "hourly-boxes skeleton");
+  const hourlyContainer = createElement("div", "hourly-boxes");
   for (let i = 0; i < 24; i++) {
-    const box = createSkeletonElement("hourly-box");
-    box.appendChild(createSkeletonText("40px", "1em"));
-    box.appendChild(createSkeletonText("40px", "40px"));
-    box.appendChild(createSkeletonText("30px", "1em"));
+    const box = createSkeletonElement("hourly-box skeleton");
+    box.appendChild(createSkeletonText("90%", "2em"));
+    box.appendChild(createSkeletonText("30%", "1em"));
+    box.appendChild(createSkeletonText("80%", "6em"));
+    box.appendChild(createSkeletonText("100%", "1em"));
     hourlyContainer.appendChild(box);
   }
   return hourlyContainer;
 };
 
 export const weatherComponentWrapper = (componentFn, componentName) => {
-  return (weatherData) => {
+  return (...args) => {
     const container = createElement("div", componentName);
+    const weatherData = args[0];
 
     if (!weatherData) {
-      const skeletonCount = getSkeletonCount(componentName);
-      for (let i = 0; i < skeletonCount; i++) {
-        container.appendChild(createSkeletonWidget());
+      if (componentName === "hourly-forecast") {
+        container.appendChild(createSkeletonHourlyBoxes());
+      } else {
+        const skeletonCount = getSkeletonCount(componentName);
+        for (let i = 0; i < skeletonCount; i++) {
+          container.appendChild(createSkeletonWidget());
+        }
       }
       return container;
     }
-    return componentFn(weatherData);
+    return componentFn(...args);
   };
 };
 
@@ -52,6 +58,8 @@ const skeletonCounts = {
   "moisture-weather": 3,
   "air-weather": 2,
   "hourly-forecast": 24,
+  "quick-weather": 1,
+  "sun-weather": 4,
 };
 
 const defaultSkeletonCount = 1;

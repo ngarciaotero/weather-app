@@ -1,10 +1,11 @@
-import { createToggleContainer } from "./unitToggler.js";
+import { createToggleContainer } from "../../../utils/unitToggler.js";
 import {
   createElement,
   createTextElement,
   createImageElement,
-} from "../../utils/uiElements.js";
-import { weatherComponentWrapper } from "../../utils/skeletonHelper.js";
+} from "../../../utils/uiElements.js";
+import { weatherComponentWrapper } from "../../../utils/skeletonHelper.js";
+import { sunMoonContainer } from "./sunMoonWeather.js";
 
 const quickWeatherComponent = (weatherData) => {
   const weatherContainer = createElement("div", "quick-weather");
@@ -25,10 +26,19 @@ const quickWeatherComponent = (weatherData) => {
     tempF: weatherData.current.feelsLikeF,
   });
 
+  const sunMoon = sunMoonContainer({
+    sunrise: weatherData.forecast[0].sunrise,
+    sunset: weatherData.forecast[0].sunset,
+    moonrise: weatherData.forecast[0].moonrise,
+    moonset: weatherData.forecast[0].moonset,
+    moonPhase: weatherData.forecast[0].moonPhase,
+  });
+
   weatherContainer.appendChild(location);
   weatherContainer.appendChild(temperature);
   weatherContainer.appendChild(condition);
   weatherContainer.appendChild(feelsLike);
+  weatherContainer.appendChild(sunMoon);
 
   return weatherContainer;
 };

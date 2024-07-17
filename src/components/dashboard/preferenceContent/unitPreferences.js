@@ -3,12 +3,12 @@ import {
   unitOptions,
   unitPreferences,
   updateUnitDisplays,
-} from "./unitToggler.js";
-import { createElement, createTextElement } from "../../utils/uiElements.js";
+} from "../../../utils/unitToggler.js";
+import { createElement, createTextElement } from "../../../utils/uiElements.js";
 
 export const unitTogglePreferences = () => {
-  const preferenceContainer = createElement("div");
-  const header = preferenceHeader("h4", "Unit of Measure");
+  const preferenceContainer = createElement("div", "unit-preferences");
+  const header = preferenceHeader("h4", "Unit Preferences");
   const options = preferenceOptions();
 
   preferenceContainer.appendChild(header);
@@ -18,7 +18,7 @@ export const unitTogglePreferences = () => {
 };
 
 const preferenceOptions = () => {
-  const optionContainer = createElement("div");
+  const optionContainer = createElement("div", "unit-options");
 
   for (const [category, units] of Object.entries(unitOptions)) {
     const categoryLabel = categoryTxt(category);
@@ -35,7 +35,7 @@ const preferenceHeader = (headerType, headerTxt) => {
 };
 
 const unitInput = (category, units) => {
-  const inputsContainer = createElement("div");
+  const inputsContainer = createElement("div", "unit-inputs");
   units.forEach((unit) => {
     const input = createElement("input");
     input.type = "radio";
