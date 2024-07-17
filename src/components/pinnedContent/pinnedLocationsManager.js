@@ -45,7 +45,8 @@ const onPinnedLocationClick = async (locationId) => {
 };
 
 export const onPinClick = (locationData, weatherData) => {
-  if (isLocationPinned(locationData.id)) return;
+  if (isLocationPinned(locationData.id, locationData.lat, locationData.lon))
+    return;
 
   const { id: locationId, lat: latitude, lon: longitude } = locationData;
   const { name: city, region } = weatherData.location;

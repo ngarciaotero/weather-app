@@ -6,15 +6,25 @@ const savePinnedLocations = (locations) => {
   localStorage.setItem("pinnedLocations", JSON.stringify(locations));
 };
 
-export const isLocationPinned = (locationId) => {
+export const isLocationPinned = (id, lat, lon) => {
   const pinnedLocations = getPinnedLocations();
-  return pinnedLocations.some((location) => location.id === locationId);
+  return pinnedLocations.some((location) => {
+    if (location.id === id) return true;
+    if (
+      Math.abs(location.lat - lat) < 0.01 &&
+      Math.abs(location.lon - lon) < 0.01
+    )
+      return true;
+    return false;
+  });
 };
 
 export const addLocation = (location) => {
   const pinnedLocations = getPinnedLocations();
-  pinnedLocations.push(location);
-  savePinnedLocations(pinnedLocations);
+  if (!isLocationPinned(location.id, location.lat, location.lon)) {
+    pinnedLocations.push(location);
+    savePinnedLocations(pinnedLocations);
+  }
 };
 
 export const removeLocation = (locationId) => {
