@@ -1,9 +1,8 @@
-import config from "../../config.production.js";
 import { fetchApi } from "../utils/apiHelpers.js";
 
 export const getForecastData = async (url, days = 3) => {
   const rawData = await fetchApi(
-    `https://api.weatherapi.com/v1/forecast.json?key=${config.API_KEY}&q=${url}&days=${days}&aqi=yes`,
+    `https://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${url}&days=${days}&aqi=yes`,
     "fetch forecast data"
   );
   return processForecastData(rawData);
@@ -11,7 +10,7 @@ export const getForecastData = async (url, days = 3) => {
 
 export const searchFor = async (desiredLocationString) => {
   const searchData = await fetchApi(
-    `https://api.weatherapi.com/v1/search.json?key=${config.API_KEY}&q=${desiredLocationString}`,
+    `https://api.weatherapi.com/v1/search.json?key=${process.env.WEATHER_API_KEY}&q=${desiredLocationString}`,
     "search for locations"
   );
   return processSearchResults(searchData);
